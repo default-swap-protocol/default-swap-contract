@@ -9,9 +9,12 @@ contract Pool {
   uint256 coveragePool;
 
   modifier onlyWhenExpired() {
+    require(isExpired == true, "a loan hasn't expired yet");
     _;
   }
+
   modifier onlyWhenDefault() {
+    require(isDefault == true, "a loan didn't default");
     _;
   }
 
