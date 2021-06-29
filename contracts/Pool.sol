@@ -24,7 +24,7 @@ contract Pool is SampleMapleLoanContract {
     expirationTimestamp = _expirationTimestamp;
   }
 
-  function expire() public {
+  function setIsExpiredTrue() public {
     require(
       block.timestamp > expirationTimestamp,
       "the expiration time hasn't come yet"
