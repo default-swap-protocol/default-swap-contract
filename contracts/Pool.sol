@@ -18,9 +18,17 @@ contract Pool {
     _;
   }
 
-  constructor() {}
+  constructor(uint256 _expirationTimestamp) {
+    expirationTimestamp = _expirationTimestamp;
+  }
 
-  function expire() {}
+  function expire() public {
+    require(
+      block.timestamp > expirationTimestamp,
+      "the expiration time hasn't come yet"
+    );
+    isExpired = true;
+  }
 
   function calculatePremium() public view returns () {}
 
