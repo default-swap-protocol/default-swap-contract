@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.0;
 
-contract Pool {
+import "./SampleMapleLoanContract";
+
+contract Pool is SampleMapleLoanContract {
   uint256 expirationTimestamp;
   bool isExpired;
   bool isDefault;
@@ -28,6 +30,14 @@ contract Pool {
       "the expiration time hasn't come yet"
     );
     isExpired = true;
+  }
+
+  function setIsDefaultTrue() public {
+    require(
+      SampleMapleLoanContract.isDefault() == true,
+      "the loan did not default"
+    );
+    isDefault = true;
   }
 
   function calculatePremium() public view returns () {}
