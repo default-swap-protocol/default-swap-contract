@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.0;
 
-import "./SampleMapleLoanContract";
+import "./PremToken.sol";
+import "./SampleMapleLoanContract.sol";
 
 contract Pool is SampleMapleLoanContract {
   uint256 expirationTimestamp;
   bool isExpired;
-  bool isDefault;
   uint256 premiumPool;
   uint256 coveragePool;
+
+  constructor(uint256 _expirationTimestamp) {
+    expirationTimestamp = _expirationTimestamp;
+  }
 
   modifier onlyWhenExpired() {
     require(isExpired == true, "a loan hasn't expired yet");
@@ -16,12 +20,8 @@ contract Pool is SampleMapleLoanContract {
   }
 
   modifier onlyWhenDefault() {
-    require(isDefault == true, "a loan didn't default");
+    require(loanDefaulted == false, "a loan didn't default");
     _;
-  }
-
-  constructor(uint256 _expirationTimestamp) {
-    expirationTimestamp = _expirationTimestamp;
   }
 
   function setIsExpiredTrue() public {
@@ -32,27 +32,28 @@ contract Pool is SampleMapleLoanContract {
     isExpired = true;
   }
 
-  function setIsDefaultTrue() public {
-    require(
-      SampleMapleLoanContract.isDefault() == true,
-      "the loan did not default"
-    );
-    isDefault = true;
+  function calculatePremium() public pure returns (uint256) {
+    return uint256(0);
   }
 
-  function calculatePremium() public view returns () {}
+  function buyCoverage(uint256 premium) public {
+  }
 
-  function buyCoverage(uint256 premium) {}
+  function mintCoverageToken() public {
+  }
 
-  function mintCoverageToken() {}
+  function claimCoverage() onlyWhenDefault public {}
 
-  function claimCoverage() onlyWhenDefault {}
+  function getMaxLoss() public pure returns (uint256) {
+    return uint256(0);
+  }
 
-  function getMaxLoss() {}
+  function sellCoverage(uint256 coverage) public {}
 
-  function sellCoverage(uint256 coverage) {}
+  function mintPremiumToken() public {
+    // PremToken._mint(msg.sender, 1);
+  }
 
-  function mintPremiumToken() {}
-
-  function withdrawPremium() onlyWhenExpired {}
+  function withdrawPremium() onlyWhenExpired public {
+  }
 }

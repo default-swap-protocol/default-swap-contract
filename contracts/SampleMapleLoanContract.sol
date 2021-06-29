@@ -2,13 +2,14 @@
 pragma solidity 0.8.0;
 
 contract SampleMapleLoanContract {
-  bool isDefault;
+  bool loanDefaulted;
 
-  constructor(bool _isDefault) {
-    isDefault = _isDefault;
+  // set whether the loan has defaulted or not
+  function setLoanState(bool _hasDefaulted) public {
+    loanDefaulted = _hasDefaulted;
   }
 
-  function setIsDefault(bool _isDefault) public {
-    isDefault = _isDefault;
+  function hasDefaulted() public view returns (bool) {
+    return loanDefaulted;
   }
 }
