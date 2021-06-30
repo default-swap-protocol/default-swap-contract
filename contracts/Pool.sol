@@ -5,10 +5,10 @@ import "../interfaces/IERC20Extended.sol";
 import "./SampleMapleLoanContract.sol";
 
 contract Pool is SampleMapleLoanContract {
-  uint256 expirationTimestamp;
+  uint256 private _expirationTimestamp;
   bool isExpired;
-  uint256 premiumPool;
-  uint256 coveragePool;
+  uint256 private _coveragePool;
+  uint256 private _premiumPool;
   // address of the acceptable token address both for premium and coverage payment
   IERC20 public paymentToken;
   IERC20Extended public coverToken;
@@ -24,6 +24,16 @@ contract Pool is SampleMapleLoanContract {
     coverToken = _coverToken;
     premToken = _premToken;
     expirationTimestamp = _expirationTimestamp;
+  function expirationTimestamp() public view returns (uint256) {
+      return _expirationTimestamp;
+  }
+
+  function coveragePool() public view returns (uint256) {
+      return _coveragePool;
+  }
+
+  function premiumPool() public view returns (uint256) {
+      return _premiumPool;
   }
 
   modifier onlyWhenExpired() {
