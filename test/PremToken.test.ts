@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 describe("PremToken", function () {
   it("Should return the right name and symbol", async function () {
     const PremToken = await ethers.getContractFactory("PremToken");
-    const premToken = await PremToken.deploy("PremToken", "PRM", 10000);
+    const premToken = await PremToken.deploy("PremToken", "PRM");
 
     console.log("premToken deployed to:", premToken.address);
 

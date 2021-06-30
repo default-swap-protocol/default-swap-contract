@@ -34,7 +34,7 @@ describe("Pool", function () {
     const Pool = await ethers.getContractFactory("Pool");
 
     coverToken = await CoverToken.deploy("CoverToken", "COV");
-    premToken = await PremToken.deploy("PremToken", "PRM", 10000);
+    premToken = await PremToken.deploy("PremToken", "PRM");
     pool = await Pool.deploy(
       PAYMENT_TOKEN_ADDRESS,
       coverToken.address,
