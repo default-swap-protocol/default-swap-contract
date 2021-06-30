@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.0;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./PremToken.sol";
 import "./SampleMapleLoanContract.sol";
 
@@ -10,9 +11,9 @@ contract Pool is SampleMapleLoanContract {
   uint256 premiumPool;
   uint256 coveragePool;
   // address of the acceptable token address both for premium and coverage payment
-  address public paymentTokenAddress;
+  IERC20 public paymentTokenAddress;
 
-  constructor(address _paymentTokenAddress, uint256 _expirationTimestamp) {
+  constructor(IERC20 _paymentTokenAddress, uint256 _expirationTimestamp) {
     paymentTokenAddress = _paymentTokenAddress;
     expirationTimestamp = _expirationTimestamp;
   }
