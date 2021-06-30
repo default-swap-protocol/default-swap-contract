@@ -2,7 +2,6 @@
 pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./PremToken.sol";
 import "./SampleMapleLoanContract.sol";
 
 contract Pool is SampleMapleLoanContract {
@@ -64,7 +63,7 @@ contract Pool is SampleMapleLoanContract {
   function sellCoverage(uint256 coverage) public {}
 
   function mintPremiumToken() public {
-    // PremToken._mint(msg.sender, 1);
+    // premToken._mint(msg.sender, 1);
   }
 
   function withdrawPremium() onlyWhenExpired public {
