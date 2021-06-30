@@ -30,15 +30,15 @@ contract Pool is SampleMapleLoanContract {
   }
 
   function expirationTimestamp() public view returns (uint256) {
-      return _expirationTimestamp;
+    return _expirationTimestamp;
   }
 
   function coveragePool() public view returns (uint256) {
-      return _coveragePool;
+    return _coveragePool;
   }
 
   function premiumPool() public view returns (uint256) {
-      return _premiumPool;
+    return _premiumPool;
   }
 
   modifier onlyWhenExpired() {
@@ -47,7 +47,10 @@ contract Pool is SampleMapleLoanContract {
   }
 
   modifier onlyWhenDefault() {
-    require(SampleMapleLoanContract.hasDefaulted() == true, "a loan didn't default");
+    require(
+      SampleMapleLoanContract.hasDefaulted() == true,
+      "a loan didn't default"
+    );
     _;
   }
 
@@ -67,14 +70,18 @@ contract Pool is SampleMapleLoanContract {
     _buyCoverage(msg.sender, _premiumAmount);
   }
 
-  function _buyCoverage(address _buyer, uint _premiumAmount) private {
+  function _buyCoverage(address _buyer, uint256 _premiumAmount) private {
     paymentToken.transferFrom(_buyer, address(this), _premiumAmount);
     _premiumPool += _premiumAmount;
     uint256 _coverTokenAmount = _calculateCoverTokenAmount(_premiumAmount);
     coverToken.mint(_buyer, _coverTokenAmount);
   }
 
-  function _calculateCoverTokenAmount(uint256 _premiumAmount) private pure returns (uint256) {
+  function _calculateCoverTokenAmount(uint256 _premiumAmount)
+    private
+    pure
+    returns (uint256)
+  {
     return _premiumAmount.mul(2);
   }
 
@@ -90,6 +97,5 @@ contract Pool is SampleMapleLoanContract {
     // premToken._mint(msg.sender, 1);
   }
 
-  function withdrawPremium() onlyWhenExpired public {
-  }
+  function withdrawPremium() public onlyWhenExpired {}
 }
