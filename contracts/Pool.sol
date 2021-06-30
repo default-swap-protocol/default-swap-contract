@@ -74,11 +74,11 @@ contract Pool is SampleMapleLoanContract {
     coverToken.mint(_buyer, _coverTokenAmount);
   }
 
-  function claimCoverage() onlyWhenDefault public {}
   function _calculateCoverTokenAmount(uint256 _premiumAmount) private pure returns (uint256) {
     return _premiumAmount.mul(2);
   }
 
+  function claimCoverage(uint256 _coverTokenAmount) public onlyWhenDefault {}
 
   function getMaxLoss() public pure returns (uint256) {
     return uint256(0);
