@@ -9,8 +9,11 @@ contract Pool is SampleMapleLoanContract {
   bool isExpired;
   uint256 premiumPool;
   uint256 coveragePool;
+  // address of the acceptable token address both for premium and coverage payment
+  address public paymentTokenAddress;
 
-  constructor(uint256 _expirationTimestamp) {
+  constructor(address _paymentTokenAddress, uint256 _expirationTimestamp) {
+    paymentTokenAddress = _paymentTokenAddress;
     expirationTimestamp = _expirationTimestamp;
   }
 
