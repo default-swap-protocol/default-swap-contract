@@ -16,14 +16,16 @@ contract Pool is SampleMapleLoanContract {
 
   constructor(
     IERC20 _paymentToken,
-    uint256 _expirationTimestamp
     IERC20Extended _coverToken,
     IERC20Extended _premToken,
+    uint256 _expiryTimestamp
   ) {
     paymentToken = _paymentToken;
     coverToken = _coverToken;
     premToken = _premToken;
-    expirationTimestamp = _expirationTimestamp;
+    _expirationTimestamp = _expiryTimestamp;
+  }
+
   function expirationTimestamp() public view returns (uint256) {
       return _expirationTimestamp;
   }
@@ -48,7 +50,7 @@ contract Pool is SampleMapleLoanContract {
 
   function setIsExpiredTrue() public {
     require(
-      block.timestamp > expirationTimestamp,
+      block.timestamp > _expirationTimestamp,
       "the expiration time hasn't come yet"
     );
     isExpired = true;
