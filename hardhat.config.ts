@@ -17,7 +17,8 @@ const config: HardhatUserConfig = {
       gasPrice: 229000000000, // check the latest gas price market in https://www.ethgasstation.info/
       // inject: false, // optional. If true, it will EXPOSE your mnemonic in your frontend code. Then it would be available as an "in-page browser wallet" / signer which can sign without confirmation.
       accounts: {
-        mnemonic: process.env.MNEMONIC_WORDS
+        mnemonic: process.env.MNEMONIC_WORDS,
+        initialIndex: process.env.WALLET_INITIAL_INDEX ? parseInt(process.env.WALLET_INITIAL_INDEX) : 0 // set index of account to use inside wallet (defaults to 0)
       }
     },
     mainnet: {
