@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.0;
 
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "../interfaces/IERC20Extended.sol";
 import "./SampleMapleLoanContract.sol";
 
 contract Pool is SampleMapleLoanContract {
+  using SafeMath for uint256;
+
   uint256 private _expirationTimestamp;
   bool isExpired;
   uint256 private _coveragePool;
