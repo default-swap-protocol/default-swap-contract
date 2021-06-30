@@ -6,8 +6,18 @@ const EXPIRATION_TIMESTAMP = 1625629498;
 
 describe("Pool", function () {
   it("Should create a pool", async function () {
+    const CoverToken = await ethers.getContractFactory("CoverToken");
+    const PremToken = await ethers.getContractFactory("PremToken");
     const Pool = await ethers.getContractFactory("Pool");
-    const pool = await Pool.deploy(PAYMENT_TOKEN_ADDRESS, EXPIRATION_TIMESTAMP);
+
+    const coverToken = await CoverToken.deploy("CoverToken", "COV");
+    const premToken = await PremToken.deploy("PremToken", "PRM", 10000);
+    const pool = await Pool.deploy(
+      PAYMENT_TOKEN_ADDRESS,
+      coverToken.address,
+      premToken.address,
+      EXPIRATION_TIMESTAMP
+    );
 
     console.log("Deploying Pool...");
     console.log("pool deployed to:", pool.address);
