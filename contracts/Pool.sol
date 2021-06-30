@@ -63,13 +63,22 @@ contract Pool is SampleMapleLoanContract {
     return uint256(0);
   }
 
-  function buyCoverage(uint256 premium) public {
+  function buyCoverage(uint256 _premiumAmount) external {
+    _buyCoverage(msg.sender, _premiumAmount);
   }
 
-  function mintCoverageToken() public {
+  function _buyCoverage(address _buyer, uint _premiumAmount) private {
+    paymentToken.transferFrom(_buyer, address(this), _premiumAmount);
+    _premiumPool += _premiumAmount;
+    uint256 _coverTokenAmount = _calculateCoverTokenAmount(_premiumAmount);
+    coverToken.mint(_buyer, _coverTokenAmount);
   }
 
   function claimCoverage() onlyWhenDefault public {}
+  function _calculateCoverTokenAmount(uint256 _premiumAmount) private pure returns (uint256) {
+    return _premiumAmount.mul(2);
+  }
+
 
   function getMaxLoss() public pure returns (uint256) {
     return uint256(0);
