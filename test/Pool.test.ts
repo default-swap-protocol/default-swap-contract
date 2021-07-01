@@ -55,23 +55,24 @@ describe("Pool", function () {
     expect(await pool.expirationTimestamp()).to.equal(1625629498);
   });
 
-  it("...should approve 20 DAI", async () => {
+  it("...should approve 10 DAI", async () => {
     await daiToken.approve(
       pool.address,
-      BigNumber.from(20).mul(BigNumber.from(10).pow(18))
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
     );
     expect(await daiToken.allowance(deployer.address, pool.address)).to.equal(
-      BigNumber.from(20).mul(BigNumber.from(10).pow(18))
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
     );
   });
 
-  it("...should mint 20 coverage tokens to a buyer", async () => {
-    await pool.buyCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
+  it("...should mint 10 coverage tokens to a buyer", async () => {
+    await pool.buyCoverage(BigNumber.from(5).mul(BigNumber.from(10).pow(18)));
     expect(await coverToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(20).mul(BigNumber.from(10).pow(18))
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
     );
   });
 
+<<<<<<< HEAD
   it("...should NOT allow claiming when there is no default event", async () => {
     await expect(pool.claimCoverage()).to.be.reverted;
   });
@@ -83,6 +84,8 @@ describe("Pool", function () {
       .withArgs(deployer.address);
   });
 
+=======
+>>>>>>> main
   it("...should mint 2 premium tokens to a seller", async () => {
     await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
