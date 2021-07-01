@@ -10,6 +10,5 @@ describe("PremToken", function () {
 
     expect(await premToken.name()).to.equal("PremToken");
     expect(await premToken.symbol()).to.equal("PRM");
-    expect(await premToken.totalSupply()).to.equal(10000);
   });
 });
