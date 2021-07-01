@@ -21,7 +21,6 @@ describe("Pool", function () {
       console.log(e);
     }
 
-    // const provider = ethers.getDefaultProvider();
     daiToken = new ethers.Contract(
       PAYMENT_TOKEN_ADDRESS,
       daiTokenAbi,

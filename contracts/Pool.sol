@@ -18,6 +18,18 @@ contract Pool {
   IERC20Extended public premToken;
   ISampleMapleLoanContract public sampleMapleLoanContract;
 
+  modifier onlyWhenExpired() {
+    require(isExpired == true, "a loan hasn't expired yet");
+    _;
+  }
+
+  modifier onlyWhenDefault() {
+    require(
+      sampleMapleLoanContract.loanDefaulted() == true,
+      "a loan didn't default"
+    );
+    _;
+  }
 
   event CoverageClaimed(address claimer);
   event PremiumWithdrawn(address withdrawer);
@@ -46,19 +58,6 @@ contract Pool {
 
   function premiumPool() public view returns (uint256) {
     return _premiumPool;
-  }
-
-  modifier onlyWhenExpired() {
-    require(isExpired == true, "a loan hasn't expired yet");
-    _;
-  }
-
-  modifier onlyWhenDefault() {
-    require(
-      SampleMapleLoanContract.loanDefaulted() == true,
-      "a loan didn't default"
-    );
-    _;
   }
 
   function setIsExpiredTrue() public {
