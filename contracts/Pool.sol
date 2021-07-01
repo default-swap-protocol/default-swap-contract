@@ -3,9 +3,9 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "../interfaces/IERC20Extended.sol";
-import "./SampleMapleLoanContract.sol";
+import "../interfaces/ISampleMapleLoanContract.sol";
 
-contract Pool is SampleMapleLoanContract {
+contract Pool {
   using SafeMath for uint256;
 
   uint256 private _expirationTimestamp;
@@ -16,16 +16,19 @@ contract Pool is SampleMapleLoanContract {
   IERC20 public paymentToken;
   IERC20Extended public coverToken;
   IERC20Extended public premToken;
+  ISampleMapleLoanContract public sampleMapleLoanContract;
 
   constructor(
     IERC20 _paymentToken,
     IERC20Extended _coverToken,
     IERC20Extended _premToken,
+    ISampleMapleLoanContract _sampleMapleLoanContract,
     uint256 _expiryTimestamp
   ) {
     paymentToken = _paymentToken;
     coverToken = _coverToken;
     premToken = _premToken;
+    sampleMapleLoanContract = _sampleMapleLoanContract;
     _expirationTimestamp = _expiryTimestamp;
   }
 

@@ -11,6 +11,7 @@ describe("Pool", function () {
   let daiToken: any;
   let coverToken: any;
   let premToken: any;
+  let sampleMapleLoanContract: any;
   let pool: any;
 
   before("...should make a DAI token contract instance", async function () {
@@ -32,13 +33,18 @@ describe("Pool", function () {
     const CoverToken = await ethers.getContractFactory("CoverToken");
     const PremToken = await ethers.getContractFactory("PremToken");
     const Pool = await ethers.getContractFactory("Pool");
+    const SampleMapleLoanContract = await ethers.getContractFactory(
+      "SampleMapleLoanContract"
+    );
 
     coverToken = await CoverToken.deploy("CoverToken", "COV");
     premToken = await PremToken.deploy("PremToken", "PRM");
+    sampleMapleLoanContract = await SampleMapleLoanContract.deploy();
     pool = await Pool.deploy(
       PAYMENT_TOKEN_ADDRESS,
       coverToken.address,
       premToken.address,
+      sampleMapleLoanContract.address,
       EXPIRATION_TIMESTAMP
     );
 

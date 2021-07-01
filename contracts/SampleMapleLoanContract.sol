@@ -9,7 +9,7 @@ contract SampleMapleLoanContract {
     _loanDefaulted = _hasDefaulted;
   }
 
-  function loanDefaulted() public view returns (bool) {
+  function loanDefaulted() external view returns (bool) {
     return _loanDefaulted;
   }
 }
