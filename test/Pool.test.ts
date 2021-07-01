@@ -83,10 +83,10 @@ describe("Pool", function () {
       .withArgs(deployer.address);
   });
 
-  it("...should mint 5 premium tokens to a seller", async () => {
-    await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
+  it("...should mint 2 premium tokens to a seller", async () => {
+    await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(5).mul(BigNumber.from(10).pow(18))
+      BigNumber.from(2).mul(BigNumber.from(10).pow(18))
     );
   });
 
