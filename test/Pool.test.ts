@@ -61,9 +61,16 @@ describe("Pool", function () {
   });
 
   it("...should mint 10 coverage tokens to a buyer", async () => {
-    await pool.buyCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
+    await pool.buyCoverage(BigNumber.from(5).mul(BigNumber.from(10).pow(18)));
     expect(await coverToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(20).mul(BigNumber.from(10).pow(18).toString())
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
+    );
+  });
+
+  it("...should mint 2 premium tokens to a seller", async () => {
+    await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
+    expect(await premToken.balanceOf(deployer.address)).to.equal(
+      BigNumber.from(2).mul(BigNumber.from(10).pow(18))
     );
   });
 });
