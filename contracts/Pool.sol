@@ -68,6 +68,10 @@ contract Pool {
     isExpired = true;
   }
 
+  function setIsExpiredTrueForTesting() public {
+    isExpired = true;
+  }
+
   function calculatePremium() public pure returns (uint256) {
     return uint256(0);
   }
