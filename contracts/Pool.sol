@@ -91,10 +91,23 @@ contract Pool is SampleMapleLoanContract {
     return uint256(0);
   }
 
-  function sellCoverage(uint256 coverage) public {}
+  function sellCoverage(uint256 _coverageAmount) external {
+    _sellCoverage(msg.sender, _coverageAmount);
+  }
 
-  function mintPremiumToken() public {
-    // premToken._mint(msg.sender, 1);
+  function _sellCoverage(address _seller, uint256 _coverageAmount) private {
+    paymentToken.transferFrom(_seller, address(this), _coverageAmount);
+    _coveragePool += _coverageAmount;
+    uint256 _premTokenAmount = _calculatePremTokenAmount(_coverageAmount);
+    premToken.mint(_seller, _premTokenAmount);
+  }
+
+  function _calculatePremTokenAmount(uint256 _coverageAmount)
+    private
+    pure
+    returns (uint256)
+  {
+    return _coverageAmount.div(2);
   }
 
   function withdrawPremium() public onlyWhenExpired {}
