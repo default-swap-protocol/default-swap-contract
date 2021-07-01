@@ -11,6 +11,7 @@ describe("Pool", function () {
   let daiToken: any;
   let coverToken: any;
   let premToken: any;
+  let sampleMapleLoanContract: any;
   let pool: any;
 
   before("...should make a DAI token contract instance", async function () {
@@ -20,7 +21,6 @@ describe("Pool", function () {
       console.log(e);
     }
 
-    // const provider = ethers.getDefaultProvider();
     daiToken = new ethers.Contract(
       PAYMENT_TOKEN_ADDRESS,
       daiTokenAbi,
@@ -32,13 +32,18 @@ describe("Pool", function () {
     const CoverToken = await ethers.getContractFactory("CoverToken");
     const PremToken = await ethers.getContractFactory("PremToken");
     const Pool = await ethers.getContractFactory("Pool");
+    const SampleMapleLoanContract = await ethers.getContractFactory(
+      "SampleMapleLoanContract"
+    );
 
     coverToken = await CoverToken.deploy("CoverToken", "COV");
     premToken = await PremToken.deploy("PremToken", "PRM");
+    sampleMapleLoanContract = await SampleMapleLoanContract.deploy();
     pool = await Pool.deploy(
       PAYMENT_TOKEN_ADDRESS,
       coverToken.address,
       premToken.address,
+      sampleMapleLoanContract.address,
       EXPIRATION_TIMESTAMP
     );
 
@@ -67,10 +72,35 @@ describe("Pool", function () {
     );
   });
 
+<<<<<<< HEAD
+  it("...should NOT allow claiming when there is no default event", async () => {
+    await expect(pool.claimCoverage()).to.be.reverted;
+  });
+
+  it("...should allow claiming when there is a default event", async () => {
+    await sampleMapleLoanContract.setLoanState(true);
+    await expect(pool.claimCoverage())
+      .to.emit(pool, "CoverageClaimed")
+      .withArgs(deployer.address);
+  });
+
+=======
+>>>>>>> main
   it("...should mint 2 premium tokens to a seller", async () => {
     await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
       BigNumber.from(2).mul(BigNumber.from(10).pow(18))
     );
+  });
+
+  it("...should NOT allow withdrawal of premium when a swap has NOT expired yet", async () => {
+    await expect(pool.withdrawPremium()).to.be.reverted;
+  });
+
+  it("...should allow withdrawal of premium when a swap has expired yet", async () => {
+    await pool.setIsExpiredTrueForTesting();
+    await expect(pool.withdrawPremium())
+      .to.emit(pool, "PremiumWithdrawn")
+      .withArgs(deployer.address);
   });
 });

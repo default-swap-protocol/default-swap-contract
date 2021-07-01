@@ -3,9 +3,9 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "../interfaces/IERC20Extended.sol";
-import "./SampleMapleLoanContract.sol";
+import "../interfaces/ISampleMapleLoanContract.sol";
 
-contract Pool is SampleMapleLoanContract {
+contract Pool {
   using SafeMath for uint256;
 
   uint256 private _expirationTimestamp;
@@ -16,16 +16,35 @@ contract Pool is SampleMapleLoanContract {
   IERC20 public paymentToken;
   IERC20Extended public coverToken;
   IERC20Extended public premToken;
+  ISampleMapleLoanContract public sampleMapleLoanContract;
+
+  modifier onlyWhenExpired() {
+    require(isExpired == true, "a loan hasn't expired yet");
+    _;
+  }
+
+  modifier onlyWhenDefault() {
+    require(
+      sampleMapleLoanContract.loanDefaulted() == true,
+      "a loan didn't default"
+    );
+    _;
+  }
+
+  event CoverageClaimed(address claimer);
+  event PremiumWithdrawn(address withdrawer);
 
   constructor(
     IERC20 _paymentToken,
     IERC20Extended _coverToken,
     IERC20Extended _premToken,
+    ISampleMapleLoanContract _sampleMapleLoanContract,
     uint256 _expiryTimestamp
   ) {
     paymentToken = _paymentToken;
     coverToken = _coverToken;
     premToken = _premToken;
+    sampleMapleLoanContract = _sampleMapleLoanContract;
     _expirationTimestamp = _expiryTimestamp;
   }
 
@@ -41,24 +60,15 @@ contract Pool is SampleMapleLoanContract {
     return _premiumPool;
   }
 
-  modifier onlyWhenExpired() {
-    require(isExpired == true, "a loan hasn't expired yet");
-    _;
-  }
-
-  modifier onlyWhenDefault() {
-    require(
-      SampleMapleLoanContract.hasDefaulted() == true,
-      "a loan didn't default"
-    );
-    _;
-  }
-
   function setIsExpiredTrue() public {
     require(
       block.timestamp > _expirationTimestamp,
       "the expiration time hasn't come yet"
     );
+    isExpired = true;
+  }
+
+  function setIsExpiredTrueForTesting() public {
     isExpired = true;
   }
 
@@ -85,7 +95,9 @@ contract Pool is SampleMapleLoanContract {
     return _premiumAmount.mul(2);
   }
 
-  function claimCoverage(uint256 _coverTokenAmount) public onlyWhenDefault {}
+  function claimCoverage() public onlyWhenDefault {
+    emit CoverageClaimed(msg.sender);
+  }
 
   function getMaxLoss() public pure returns (uint256) {
     return uint256(0);
@@ -110,5 +122,7 @@ contract Pool is SampleMapleLoanContract {
     return _coverageAmount.div(2);
   }
 
-  function withdrawPremium() public onlyWhenExpired {}
+  function withdrawPremium() public onlyWhenExpired {
+    emit PremiumWithdrawn(msg.sender);
+  }
 }
