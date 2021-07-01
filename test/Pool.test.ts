@@ -73,10 +73,32 @@ describe("Pool", function () {
     );
   });
 
+  it("...should NOT allow claiming when there is no default event", async () => {
+    await expect(pool.claimCoverage()).to.be.reverted;
+  });
+
+  it("...should allow claiming when there is a default event", async () => {
+    await sampleMapleLoanContract.setLoanState(true);
+    await expect(pool.claimCoverage())
+      .to.emit(pool, "CoverageClaimed")
+      .withArgs(deployer.address);
+  });
+
   it("...should mint 5 premium tokens to a seller", async () => {
     await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
       BigNumber.from(5).mul(BigNumber.from(10).pow(18))
     );
+  });
+
+  it("...should NOT allow withdrawal of premium when a swap has NOT expired yet", async () => {
+    await expect(pool.withdrawPremium()).to.be.reverted;
+  });
+
+  it("...should allow withdrawal of premium when a swap has expired yet", async () => {
+    await pool.setIsExpiredTrueForTesting();
+    await expect(pool.withdrawPremium())
+      .to.emit(pool, "PremiumWithdrawn")
+      .withArgs(deployer.address);
   });
 });
