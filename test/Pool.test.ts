@@ -72,7 +72,6 @@ describe("Pool", function () {
     );
   });
 
-<<<<<<< HEAD
   it("...should NOT allow claiming when there is no default event", async () => {
     await expect(pool.claimCoverage()).to.be.reverted;
   });
@@ -84,8 +83,6 @@ describe("Pool", function () {
       .withArgs(deployer.address);
   });
 
-=======
->>>>>>> main
   it("...should mint 2 premium tokens to a seller", async () => {
     await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
