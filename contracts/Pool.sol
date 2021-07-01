@@ -48,7 +48,7 @@ contract Pool is SampleMapleLoanContract {
 
   modifier onlyWhenDefault() {
     require(
-      SampleMapleLoanContract.hasDefaulted() == true,
+      SampleMapleLoanContract.loanDefaulted() == true,
       "a loan didn't default"
     );
     _;
