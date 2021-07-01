@@ -53,11 +53,7 @@ describe("Pool", function () {
     console.log("pool deployed to:", pool.address);
   });
 
-  it("...should set the correct expiration timestamp value", async () => {
-    expect(await pool.expirationTimestamp()).to.equal(1625629498);
-  });
-
-  it("...should approve 10 DAI", async () => {
+  before("...the deployer should approve 10 DAI", async () => {
     await daiToken.approve(
       pool.address,
       BigNumber.from(10).mul(BigNumber.from(10).pow(18))
@@ -67,28 +63,72 @@ describe("Pool", function () {
     );
   });
 
-  it("...should mint 10 coverage tokens to a buyer", async () => {
-    await pool.buyCoverage(BigNumber.from(5).mul(BigNumber.from(10).pow(18)));
-    expect(await coverToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
-    );
+  before("...the address1 should approve 1 DAI", async () => {
+    await daiToken
+      .connect(address1)
+      .approve(pool.address, BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+    expect(
+      await daiToken.connect(address1).allowance(address1.address, pool.address)
+    ).to.equal(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+  });
+
+  before("...the address2 should approve 1 DAI", async () => {
+    await daiToken
+      .connect(address2)
+      .approve(pool.address, BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+    expect(
+      await daiToken.connect(address2).allowance(address2.address, pool.address)
+    ).to.equal(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+  });
+
+  it("...should set the correct expiration timestamp value", async () => {
+    expect(await pool.expirationTimestamp()).to.equal(1625629498);
+  });
+
+  it("...should mint 1 coverage tokens to the buyer address1", async () => {
+    await pool
+      .connect(address1)
+      .buyCoverage(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+    expect(
+      await coverToken.connect(address1).balanceOf(address1.address)
+    ).to.equal(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+  });
+
+  it("...should mint 1 coverage tokens to the buyer address2", async () => {
+    await pool
+      .connect(address2)
+      .buyCoverage(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
+    expect(
+      await coverToken.connect(address2).balanceOf(address2.address)
+    ).to.equal(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
   });
 
   it("...should NOT allow claiming when there is no default event", async () => {
-    await expect(pool.claimCoverage()).to.be.reverted;
+    await expect(
+      pool
+        .connect(address1)
+        .claimCoverage(BigNumber.from(1).mul(BigNumber.from(10).pow(18)))
+    ).to.be.reverted;
   });
 
   it("...should allow claiming when there is a default event", async () => {
     await sampleMapleLoanContract.setLoanState(true);
-    await expect(pool.claimCoverage())
+    await expect(
+      pool
+        .connect(address1)
+        .claimCoverage(BigNumber.from(1).mul(BigNumber.from(10).pow(18)))
+    )
       .to.emit(pool, "CoverageClaimed")
-      .withArgs(deployer.address);
+      .withArgs(
+        address1.address,
+        BigNumber.from(5).mul(BigNumber.from(10).pow(18))
+      );
   });
 
-  it("...should mint 2 premium tokens to a seller", async () => {
-    await pool.sellCoverage(BigNumber.from(4).mul(BigNumber.from(10).pow(18)));
+  it("...should mint 10 premium tokens to the seller deployer", async () => {
+    await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
     expect(await premToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(2).mul(BigNumber.from(10).pow(18))
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
     );
   });
 
@@ -98,8 +138,13 @@ describe("Pool", function () {
 
   it("...should allow withdrawal of premium when a swap has expired yet", async () => {
     await pool.setIsExpiredTrueForTesting();
-    await expect(pool.withdrawPremium())
+    await expect(
+      pool.withdrawPremium(BigNumber.from(10).mul(BigNumber.from(10).pow(18)))
+    )
       .to.emit(pool, "PremiumWithdrawn")
-      .withArgs(deployer.address);
+      .withArgs(
+        deployer.address,
+        BigNumber.from(2).mul(BigNumber.from(10).pow(18))
+      );
   });
 });
