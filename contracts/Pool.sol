@@ -18,6 +18,10 @@ contract Pool {
   IERC20Extended public premToken;
   ISampleMapleLoanContract public sampleMapleLoanContract;
 
+
+  event CoverageClaimed(address claimer);
+  event PremiumWithdrawn(address withdrawer);
+
   constructor(
     IERC20 _paymentToken,
     IERC20Extended _coverToken,
@@ -88,7 +92,9 @@ contract Pool {
     return _premiumAmount.mul(2);
   }
 
-  function claimCoverage(uint256 _coverTokenAmount) public onlyWhenDefault {}
+  function claimCoverage() public onlyWhenDefault {
+    emit CoverageClaimed(msg.sender);
+  }
 
   function getMaxLoss() public pure returns (uint256) {
     return uint256(0);
@@ -113,5 +119,7 @@ contract Pool {
     return _coverageAmount.div(2);
   }
 
-  function withdrawPremium() public onlyWhenExpired {}
+  function withdrawPremium() public onlyWhenExpired {
+    emit PremiumWithdrawn(msg.sender);
+  }
 }
