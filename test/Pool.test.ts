@@ -8,6 +8,8 @@ const EXPIRATION_TIMESTAMP = 1625629498;
 
 describe("Pool", function () {
   let deployer: any;
+  let address1: any;
+  let address2: any;
   let daiToken: any;
   let coverToken: any;
   let premToken: any;
@@ -16,7 +18,7 @@ describe("Pool", function () {
 
   before("...should make a DAI token contract instance", async function () {
     try {
-      [deployer] = await ethers.getSigners();
+      [deployer, address1, address2] = await ethers.getSigners();
     } catch (e) {
       console.log(e);
     }
