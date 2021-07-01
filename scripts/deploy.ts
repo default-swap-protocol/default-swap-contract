@@ -7,13 +7,18 @@ async function main() {
   const CoverToken = await ethers.getContractFactory("CoverToken");
   const PremToken = await ethers.getContractFactory("PremToken");
   const Pool = await ethers.getContractFactory("Pool");
+  const SampleMapleLoanContract = await ethers.getContractFactory(
+    "SampleMapleLoanContract"
+  );
 
   const coverToken = await CoverToken.deploy("CoverToken", "COV");
   const premToken = await PremToken.deploy("PremToken", "PRM");
+  const sampleMapleLoanContract = await SampleMapleLoanContract.deploy();
   const pool = await Pool.deploy(
     PAYMENT_TOKEN_ADDRESS,
     coverToken.address,
     premToken.address,
+    sampleMapleLoanContract.address,
     EXPIRATION_TIMESTAMP
   );
 
