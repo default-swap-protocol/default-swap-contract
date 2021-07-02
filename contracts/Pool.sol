@@ -109,8 +109,10 @@ contract Pool {
   {
     uint256 _coveragePoolSize = coveragePool();
     uint256 _totalCoverTokenSupply = coverToken.totalSupply();
-    uint256 _coverTokenValue = _coveragePoolSize.div(_totalCoverTokenSupply);
-    return _coverTokenAmount.mul(_coverTokenValue);
+    uint256 _coverTokenValue = _coveragePoolSize.mul(100).div(
+      _totalCoverTokenSupply
+    );
+    return _coverTokenAmount.mul(_coverTokenValue).div(100);
   }
 
   function getMaxLoss() public pure returns (uint256) {
@@ -150,7 +152,9 @@ contract Pool {
   {
     uint256 _premiumPoolSize = premiumPool();
     uint256 _totalPremTokenSupply = premToken.totalSupply();
-    uint256 _premTokenValue = _premiumPoolSize.div(_totalPremTokenSupply);
-    return _premTokenAmount.mul(_premTokenValue);
+    uint256 _premTokenValue = _premiumPoolSize.mul(100).div(
+      _totalPremTokenSupply
+    );
+    return _premTokenAmount.mul(_premTokenValue).div(100);
   }
 }
