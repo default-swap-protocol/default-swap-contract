@@ -103,6 +103,13 @@ describe("Pool", function () {
     ).to.equal(BigNumber.from(1).mul(BigNumber.from(10).pow(18)));
   });
 
+  it("...should mint 10 premium tokens to the seller deployer", async () => {
+    await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
+    expect(await premToken.balanceOf(deployer.address)).to.equal(
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
+    );
+  });
+
   it("...should NOT allow claiming when there is no default event", async () => {
     await expect(
       pool
@@ -123,13 +130,6 @@ describe("Pool", function () {
         address1.address,
         BigNumber.from(5).mul(BigNumber.from(10).pow(18))
       );
-  });
-
-  it("...should mint 10 premium tokens to the seller deployer", async () => {
-    await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
-    expect(await premToken.balanceOf(deployer.address)).to.equal(
-      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
-    );
   });
 
   it("...should NOT allow withdrawal of premium when a swap has NOT expired yet", async () => {
