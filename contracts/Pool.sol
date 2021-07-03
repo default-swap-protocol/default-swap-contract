@@ -31,8 +31,8 @@ contract Pool {
     _;
   }
 
-  event CoverageClaimed(address claimer);
-  event PremiumWithdrawn(address withdrawer);
+  event CoverageClaimed(address claimer, uint256 _coverageAmount);
+  event PremiumWithdrawn(address withdrawer, uint256 _premiumAmount);
 
   constructor(
     IERC20 _paymentToken,
@@ -92,11 +92,27 @@ contract Pool {
     pure
     returns (uint256)
   {
-    return _premiumAmount.mul(2);
+    return _premiumAmount.mul(1);
   }
 
-  function claimCoverage() public onlyWhenDefault {
-    emit CoverageClaimed(msg.sender);
+  function claimCoverage(uint256 _coverTokenAmount) public onlyWhenDefault {
+    uint256 _coverageAmount = _calculateCoverTokenValue(_coverTokenAmount);
+    paymentToken.transferFrom(address(this), msg.sender, _coverageAmount);
+    coverToken.burn(msg.sender, _coverTokenAmount);
+    emit CoverageClaimed(msg.sender, _coverageAmount);
+  }
+
+  function _calculateCoverTokenValue(uint256 _coverTokenAmount)
+    private
+    view
+    returns (uint256)
+  {
+    uint256 _coveragePoolSize = coveragePool();
+    uint256 _totalCoverTokenSupply = coverToken.totalSupply();
+    uint256 _coverTokenValue = _coveragePoolSize.mul(100).div(
+      _totalCoverTokenSupply
+    );
+    return _coverTokenAmount.mul(_coverTokenValue).div(100);
   }
 
   function getMaxLoss() public pure returns (uint256) {
@@ -119,10 +135,26 @@ contract Pool {
     pure
     returns (uint256)
   {
-    return _coverageAmount.div(2);
+    return _coverageAmount.mul(1);
   }
 
-  function withdrawPremium() public onlyWhenExpired {
-    emit PremiumWithdrawn(msg.sender);
+  function withdrawPremium(uint256 _premTokenAmount) public onlyWhenExpired {
+    uint256 _premiumAmount = _calculatePremTokenValue(_premTokenAmount);
+    paymentToken.transferFrom(address(this), msg.sender, _premiumAmount);
+    premToken.burn(msg.sender, _premTokenAmount);
+    emit PremiumWithdrawn(msg.sender, _premiumAmount);
+  }
+
+  function _calculatePremTokenValue(uint256 _premTokenAmount)
+    private
+    view
+    returns (uint256)
+  {
+    uint256 _premiumPoolSize = premiumPool();
+    uint256 _totalPremTokenSupply = premToken.totalSupply();
+    uint256 _premTokenValue = _premiumPoolSize.mul(100).div(
+      _totalPremTokenSupply
+    );
+    return _premTokenAmount.mul(_premTokenValue).div(100);
   }
 }
