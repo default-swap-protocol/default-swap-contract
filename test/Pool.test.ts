@@ -147,4 +147,21 @@ describe("Pool", function () {
         BigNumber.from(2).mul(BigNumber.from(10).pow(18))
       );
   });
+
+  it("...should allow withdrawal of coverage when a swap has expired and a loan did NOT default", async () => {
+    await daiToken.approve(
+      pool.address,
+      BigNumber.from(10).mul(BigNumber.from(10).pow(18))
+    );
+    await pool.sellCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)));
+    await sampleMapleLoanContract.setLoanState(false);
+    await expect(
+      pool.withdrawCoverage(BigNumber.from(10).mul(BigNumber.from(10).pow(18)))
+    )
+      .to.emit(pool, "CoverageWithdrawn")
+      .withArgs(
+        deployer.address,
+        BigNumber.from(10).mul(BigNumber.from(10).pow(18))
+      );
+  });
 });
