@@ -141,6 +141,7 @@ contract Pool {
   function withdrawPremium(uint256 _premTokenAmount) public onlyWhenExpired {
     uint256 _premiumAmount = _calculatePremTokenValue(_premTokenAmount);
     paymentToken.transferFrom(address(this), msg.sender, _premiumAmount);
+    _premiumPool -= _premiumAmount;
     premToken.burn(msg.sender, _premTokenAmount);
     emit PremiumWithdrawn(msg.sender, _premiumAmount);
   }
