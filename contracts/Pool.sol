@@ -31,8 +31,17 @@ contract Pool {
     _;
   }
 
+  modifier onlyWhenNotDefault() {
+    require(
+      sampleMapleLoanContract.loanDefaulted() == false,
+      "a loan defaulted"
+    );
+    _;
+  }
+
   event CoverageClaimed(address claimer, uint256 _coverageAmount);
   event PremiumWithdrawn(address withdrawer, uint256 _premiumAmount);
+  event CoverageWithdrawn(address withdrawer, uint256 _coverageAmount);
 
   constructor(
     IERC20 _paymentToken,
@@ -157,5 +166,15 @@ contract Pool {
       _totalPremTokenSupply
     );
     return _premTokenAmount.mul(_premTokenValue).div(100);
+  }
+
+  function withdrawCoverage(uint256 _coverageAmount)
+    public
+    onlyWhenExpired
+    onlyWhenNotDefault
+  {
+    paymentToken.transferFrom(address(this), msg.sender, _coverageAmount);
+    _coveragePool -= _coverageAmount;
+    emit CoverageWithdrawn(msg.sender, _coverageAmount);
   }
 }
