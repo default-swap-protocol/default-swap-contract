@@ -177,4 +177,12 @@ contract Pool {
     _coveragePool -= _coverageAmount;
     emit CoverageWithdrawn(msg.sender, _coverageAmount);
   }
+
+  function withdrawPremiumAndCoverage(
+    uint256 _premTokenAmount,
+    uint256 _coverageAmount
+  ) public onlyWhenExpired onlyWhenNotDefault {
+    withdrawPremium(_premTokenAmount);
+    withdrawCoverage(_coverageAmount);
+  }
 }
